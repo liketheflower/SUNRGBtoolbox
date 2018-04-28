@@ -1,0 +1,23 @@
+addpath(genpath('.'))
+load('./Metadata/SUNRGBDMeta.mat')
+
+imageId = 31;
+data = SUNRGBDMeta(imageId);
+[rgb,points3d,depthInpaint,imsize]=read3dPoints(data);
+%% draw 
+figure,
+rgb_path =strcat('/Users/jimmy/Dropbox/SUNRGBD',data.rgbpath(17:end))
+imshow(rgb_path);
+hold on; 
+for kk =1:length(data.groundtruth3DBB)
+    rectangle('Position', [data.groundtruth3DBB(kk).gtBb2D(1) data.groundtruth3DBB(kk).gtBb2D(2) data.groundtruth3DBB(kk).gtBb2D(3) data.groundtruth3DBB(kk).gtBb2D(4)],'edgecolor','y');
+    text(data.groundtruth3DBB(kk).gtBb2D(1),data.groundtruth3DBB(kk).gtBb2D(2),data.groundtruth3DBB(kk).classname,'BackgroundColor','y')
+end
+%% draw 3D 
+figure,
+vis_point_cloud(points3d,rgb)
+hold on;
+for kk =1:length(data.groundtruth3DBB)
+   vis_cube(data.groundtruth3DBB(kk),'r')
+end
+
